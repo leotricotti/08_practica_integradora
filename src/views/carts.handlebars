@@ -1,0 +1,186 @@
+<main>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">
+        E-Store
+      </a>
+      <div
+        class="collapse navbar-collapse d-flex align-items-center mb-0"
+        id="navbarSupportedContent"
+      >
+        <ul
+          class="navbar-nav ms-auto mb-2 mb-lg-0 profile-menu d-flex align-items-center"
+        >
+          <p class="text-white-50">
+            Bienvenido {{user}}
+          </p>
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle"
+              href="#"
+              id="navbarDropdown"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <span class="text-light me-3" id="'user-name">
+              </span>
+              <i class="fas fa-user"></i>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li>
+                <a class="dropdown-item" href="#">
+                  <i class="fas fa-sliders-h fa-fw"></i>
+                  Cuenta
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="#">
+                  <i class="fas fa-cog fa-fw"></i>
+                  Configuración
+                </a>
+              </li>
+              <li>
+                <hr class="dropdown-divider" />
+              </li>
+              <li>
+                <button class="btn dropdown-item" onclick="logout()">
+                  <i class="fas fa-sign-out-alt fa-fw"></i>
+                  Cerrar sesión
+                </button>
+              </li>
+            </ul>
+          </li>
+          <button class="btn position-relative">
+            <a href="" id="cart-route">
+              <i class="fa-solid fa-cart-shopping"></i>
+              <span
+                id="cart-badge"
+                class="cart-basket d-flex align-items-center justify-content-center"
+              ></span>
+            </a>
+          </button>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div class="container h-100 py-5">
+    {{#if cart}}
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-10">
+          <h3
+            class="fw-normal text-black mb-5 text-decoration-underline text-center"
+          >
+            Carrito de compras
+          </h3>
+          <nav
+            class="d-flex justify-content-between mb-3 nav-products flex-wrap"
+          >
+            <button
+              class="btn btn-secondary btn-sm mb-2"
+              onclick="continueBuying()"
+              type="button"
+            >
+              Seguir comprando
+            </button>
+            <button
+              class="btn btn-secondary btn-sm mb-2"
+              type="button"
+              onclick="deleteAllProducts()"
+            >
+              Vaciar carrito
+            </button>
+            <button
+              class="btn btn-secondary btn-sm mb-2"
+              type="button"
+              onclick="finishBuy()"
+            >
+              Finalizar compra
+            </button>
+          </nav>
+          <div class="card rounded-3 mb-4">
+            <div class="card-body p-4">
+              {{#each cart}}
+                <div class="product-cart">
+                  <div
+                    class="row d-flex justify-content-between align-items-center mb-3 mt-3"
+                  >
+                    {{#each product.thumbnail}}
+                      <div class="col-md-2 col-lg-2 col-xl-2">
+                        <img
+                          src={{img1}}
+                          class="img-fluid rounded-3"
+                          alt="Cotton T-shirt"
+                        />
+                      </div>
+                    {{/each}}
+                    <div class="col-md-3 col-lg-3 col-xl-3 mt-2">
+                      <p class="lead fw-normal mb-2">
+                        Producto:
+                        <span class="text-muted">
+                          {{product.title}}
+                        </span>
+                      </p>
+                    </div>
+                    <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
+                      <button
+                        class="btn btn-link px-2"
+                        onclick="decreaseQuantity('{{product._id}}')"
+                      >
+                        <i class="fas fa-minus"></i>
+                      </button>
+                      <input
+                        name="quantity"
+                        value={{quantity}}
+                        type="text"
+                        class="form-control form-control-sm text-center"
+                      />
+                      <button
+                        class="btn btn-link px-2"
+                        onclick="increaseQuantity('{{product._id}}')"
+                      >
+                        <i class="fas fa-plus"></i>
+                      </button>
+                    </div>
+                    <div
+                      class="col-md-3 col-lg-2 col-xl-2 offset-lg-1 mb-4 mt-4"
+                    >
+                      <h5 class="mb-0">
+                        $ {{product.price}}
+                      </h5>
+                    </div>
+                    <div
+                      class="col-md-1 col-lg-1 col-xl-1 text-danger trash-icon"
+                      onclick="deleteProduct('{{product._id}}')"
+                    >
+                      <i class="fas fa-trash fa-lg"></i>
+                    </div>
+                  </div>
+                </div>
+              {{/each}}
+            </div>
+          </div>
+        </div>
+      </div>
+    {{else}}
+      <nav class="d-flex mb-3 nav-products flex-wrap">
+        <h3 class="fw-normal text-black mb-2">
+          Aún no hay productos
+        </h3>
+        <button class="btn btn-secondary btn-sm" type="button">
+          <a href="/api/products">
+            Ir a comprar
+          </a>
+        </button>
+      </nav>
+    {{/if}}
+  </div>
+</main>
+<!-- Logout -->
+<script src="/js/logout.scripts.js"></script>
+<!-- Show Result -->
+<script src="/js/showResult.scripts.js"></script>
+<!-- Cart Badge -->
+<script src="/js/cartBadge.scripts.js"></script>
+<!-- Custom JS -->
+<script src="/js/carts.scripts.js"></script>
