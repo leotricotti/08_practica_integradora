@@ -18,6 +18,7 @@ const cartsSchema = mongoose.Schema({
     default: [],
   },
 });
+
 //Middleware para popular el carrito
 cartsSchema.pre("find", function () {
   this.populate("products.product");

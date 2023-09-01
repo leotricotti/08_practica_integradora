@@ -74,11 +74,11 @@ const signupForm = document.getElementById("signup-form");
 // Captura los datos del formulario de registro
 signupForm.addEventListener("submit", function (event) {
   event.preventDefault();
+  const age = document.getElementById("age").value;
   const username = document.getElementById("username").value;
   const password = document.getElementById("password").value;
-  const first_name = document.getElementById("first_name").value;
   const last_name = document.getElementById("last_name").value;
-  const age = document.getElementById("age").value;
+  const first_name = document.getElementById("first_name").value;
 
   // Envía los datos del formulario de registro y crea un usuario
   postSignup(first_name, last_name, age, username, password);
