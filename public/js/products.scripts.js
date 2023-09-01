@@ -53,8 +53,21 @@ const addProduct = async (idProduct) => {
 };
 
 //Ruta que agrega el id del carrito como referencia al usuario
-const addCartId = async (user, cart) => {
+const addCartId = async () => {
+  const cartId = localStorage.getItem("cartId");
   const response = await fetch("/addCartId", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      cart: cartId,
+    }),
+  });
+  return response;
+};
+
+addCartId();
 
 //Obtener cartId de localStorage y asignarlo a la ruta del carrito
 const setCartRoute = () => {

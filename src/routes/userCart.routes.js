@@ -6,11 +6,12 @@ const userManager = new User();
 
 //Ruta que agrega el id del carrito al usuario
 router.post("/addCartId", async (req, res) => {
-  const { username, cart } = req.body;
+  const { cartId } = req.body;
+  const username = req.session.user.username;
   try {
-    const cartExist = result[0].cart.find((element) => element === cart);
+    const cartExist = result[0].cart.find((element) => element === cartId);
     if (!cartExist) {
-      const result = await userManager.updateCart(username, cart);
+      const result = await userManager.updateCart(username, cartId);
       res.status(200).json({
         respuesta: "Carrito agregado con éxito",
         data: result,
