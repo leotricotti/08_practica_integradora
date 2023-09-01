@@ -52,7 +52,7 @@ async function postLogin(username, password) {
   }
 }
 
-//Función que al agregar un producto al carrito y el producto ya existe en el carrito, aumenta la cantidad del producto en 1
+//Crea un carrito vacío en la base de datos
 const createCart = async () => {
   if (localStorage.getItem("cartId")) {
     return;

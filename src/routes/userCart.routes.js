@@ -5,17 +5,23 @@ const router = Router();
 const userManager = new User();
 
 //Ruta que agrega el id del carrito al usuario
-router.post("/addCart", async (req, res) => {
-  const { user, cart } = req.body;
-
-  const result = await userManager.addCart(user, cart);
-  if (result.length === 0)
-    return res.status(401).json({
-      respuesta: "El usuario no existe",
-    });
-  else {
-    res.status(200).json({
-      respuesta: "Carrito agregado con éxito",
+router.post("/addCartId", async (req, res) => {
+  const { username, cart } = req.body;
+  try {
+    const cartExist = result[0].cart.find((element) => element === cart);
+    if (!cartExist) {
+      const result = await userManager.updateCart(username, cart);
+      res.status(200).json({
+        respuesta: "Carrito agregado con éxito",
+        data: result,
+      });
+    } else {
+      return null;
+    }
+  } catch (err) {
+    res.status(500).json({
+      message: "Error al agregar el carrito",
+      data: err,
     });
   }
 });
