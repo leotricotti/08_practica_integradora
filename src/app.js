@@ -8,6 +8,7 @@ import session from "express-session";
 import MongoStore from "connect-mongo";
 import cookieParser from "cookie-parser";
 import handlebars from "express-handlebars";
+import UserCart from "./routes/userCart.routes.js";
 import CartsRouter from "./routes/carts.routes.js";
 import LoginRouter from "./routes/login.routes.js";
 import SignUpRouter from "./routes/signup.routes.js";
@@ -68,8 +69,8 @@ app.use(
 // Passport
 githubStrategy();
 initializePassport();
-app.use(passport.initialize());
 app.use(passport.session());
+app.use(passport.initialize());
 
 // Conexión respuesta de la base de datos
 const enviroment = async () => {
@@ -85,6 +86,7 @@ enviroment();
 
 // Routes
 app.use("/", LoginRouter);
+app.use("/addCart", UserCart);
 app.use("/forgot", ForgotRouter);
 app.use("/signup", SignUpRouter);
 app.use("/api/carts", CartsRouter);
