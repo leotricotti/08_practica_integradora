@@ -8,23 +8,6 @@ const filterProductsByCategory = async (category) => {
   return (window.location.href = `/api/products?category=${category}`);
 };
 
-//Función que crea el carrito si no existe
-const createCart = async () => {
-  if (localStorage.getItem("cartId")) {
-    return;
-  }
-  const response = await fetch("/api/carts", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      products: [],
-    }),
-  });
-  const result = await response.json();
-};
-
 //Guardar cartId en localStorage
 const saveCartId = (cartId) => {
   const localId = localStorage.getItem("cartId");
@@ -47,9 +30,24 @@ const getCartId = async () => {
 
 getCartId();
 
+//Ruta que agrega el id del carrito como referencia al usuario
+const addCartId = async (username) => {
+  const cartId = localStorage.getItem("cartId");
+  const response = await fetch("/api/userCart", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      cartId,
+      username,
+    }),
+  });
+  return response;
+};
+
 // Agrega productos al carrito
 const addProduct = async (idProduct) => {
-  createCart();
   const cartId = localStorage.getItem("cartId");
   if (!cartId) {
     const response = await fetch(`/api/carts/${cartId}/product/${idProduct}`, {

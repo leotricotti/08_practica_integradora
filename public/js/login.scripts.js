@@ -13,6 +13,22 @@ const moveToGithub = () => {
   window.location.href = "/api/sessions/github";
 };
 
+//Ruta que agrega el id del carrito como referencia al usuario
+const addCartId = async (username) => {
+  const cartId = localStorage.getItem("cartId");
+  const response = await fetch("/api/userCart", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      cartId,
+      username,
+    }),
+  });
+  return response;
+};
+
 //Capturar datos del formulario de registro y los envía al servidor
 async function postLogin(username, password) {
   try {
@@ -45,6 +61,7 @@ async function postLogin(username, password) {
     }
 
     window.location.href = "/api/products?page=1";
+    addCartId(username);
     return result;
   } catch (error) {
     console.error(error);

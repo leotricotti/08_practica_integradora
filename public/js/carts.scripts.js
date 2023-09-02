@@ -1,18 +1,3 @@
-//Ruta que agrega el id del carrito como referencia al usuario
-const addCartId = async () => {
-  const cartId = localStorage.getItem("cartId");
-  const response = await fetch("/api/userCart", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      cartId,
-    }),
-  });
-  return response;
-};
-
 //Función que crea el carrito si no existe
 const createCart = async () => {
   if (localStorage.getItem("cartId")) {
@@ -125,9 +110,7 @@ const finishBuy = () => {
         confirmButtonColor: "#3085d6",
         confirmButtonText: "Aceptar",
       }).then(() => {
-        addCartId();
-        createCart();
-        window.location.href = "/api/products?page=1";
+        deleteAllProducts();
         localStorage.removeItem("cartId");
       });
     }
