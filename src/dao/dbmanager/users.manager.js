@@ -49,4 +49,28 @@ export default class User {
       return [];
     }
   };
+
+  //Método asyncrono para actualizar el carrito
+  updateCart = async (user, cartId) => {
+    try {
+      const respuesta = await usersModel.findByIdAndUpdate(user, {
+        cart: cartId,
+      });
+      return respuesta;
+    } catch (error) {
+      console.log(error);
+      return [];
+    }
+  };
+
+  // Método asyncrono para popular el carrito
+  populatedCart = async (id) => {
+    try {
+      const result = await usersModel.findById(id);
+      return result;
+    } catch (error) {
+      console.log(error);
+      return [];
+    }
+  };
 }

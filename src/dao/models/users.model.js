@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, max: 100, unique: true },
   age: { type: Number, required: true, max: 100 },
   password: { type: String, required: true, max: 100 },
-  cart: {
+  carts: {
     type: [
       {
         type: mongoose.SchemaTypes.ObjectId,
@@ -21,6 +21,11 @@ const userSchema = new mongoose.Schema({
     enum: ["user", "admin"],
     default: "user",
   },
+});
+
+//Middleware para popular el carrito
+userSchema.pre("find", function () {
+  this.populate("carts.cart");
 });
 
 const User = mongoose.model(userCollection, userSchema);

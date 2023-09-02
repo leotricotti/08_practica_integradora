@@ -10,9 +10,9 @@ const filterProductsByCategory = async (category) => {
 
 //Guardar cartId en localStorage
 const saveCartId = (cartId) => {
-  console.log(cartId);
-  const localId = localStorage.getItem("cartId");
-  if (!localId) localStorage.setItem("cartId", cartId);
+  if (!cartId) {
+    localStorage.setItem("cartId", cartId);
+  }
 };
 
 //Obtener carrito
@@ -51,6 +51,22 @@ const addProduct = async (idProduct) => {
     return response;
   }
 };
+
+//Ruta que agrega el id del carrito como referencia al usuario
+const addCartId = async () => {
+  const response = await fetch("/addCartId", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      cart: cartId,
+    }),
+  });
+  return response;
+};
+
+addCartId();
 
 //Obtener cartId de localStorage y asignarlo a la ruta del carrito
 const setCartRoute = () => {
