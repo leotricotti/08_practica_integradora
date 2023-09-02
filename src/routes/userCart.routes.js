@@ -11,7 +11,9 @@ router.post("/", async (req, res) => {
   try {
     const user = await userManager.getOne(username);
     const userId = user[0]._id;
-    user[0].carts.push(cartId);
+    if (!user[0].carts.includes(cartId)) {
+      user[0].carts.push(cartId);
+    }
     const respuesta = await userManager.updateCart(userId, user[0]);
   } catch (err) {
     res.status(500).json({
