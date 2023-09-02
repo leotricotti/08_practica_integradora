@@ -13,7 +13,22 @@ const addCartId = async () => {
   return response;
 };
 
-console.log(localStorage.getItem("cartId"));
+//Función que crea el carrito si no existe
+const createCart = async () => {
+  if (localStorage.getItem("cartId")) {
+    return;
+  }
+  const response = await fetch("/api/carts", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      products: [],
+    }),
+  });
+  const result = await response.json();
+};
 
 //Incrementa la cantidad de un producto en el carrito
 const increaseQuantity = async (idProduct) => {
@@ -109,15 +124,11 @@ const finishBuy = () => {
         icon: "success",
         confirmButtonColor: "#3085d6",
         confirmButtonText: "Aceptar",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          localStorage.removeItem("cartId");
-          window.location.href = "/api/products?page=1";
-          addCartId();
-          setTimeout(() => {
-            localStorage.removeItem("cartId");
-          }, 2000);
-        }
+      }).then(() => {
+        addCartId();
+        createCart();
+        window.location.href = "/api/products?page=1";
+        localStorage.removeItem("cartId");
       });
     }
   });
