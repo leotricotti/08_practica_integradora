@@ -6,7 +6,8 @@ const userManager = new User();
 
 //Ruta que agrega el id del carrito al usuario
 router.post("/", async (req, res) => {
-  const { cartId, username } = req.body;
+  const { cartId } = req.body;
+  const username = req.session.user.email;
   try {
     const user = await userManager.getOne(username);
     const userId = user[0]._id;
