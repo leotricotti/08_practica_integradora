@@ -5,14 +5,15 @@ const router = Router();
 const userManager = new User();
 
 //Ruta que agrega el id del carrito al usuario
-router.get("/", async (req, res) => {
+router.post("/", async (req, res) => {
   const { cartId } = req.body;
   const username = req.session.user.email;
   try {
     const user = await userManager.getOne(username);
-
-    user.carts.push({ cart: cartId });
-    const result = await userManager.updateCart(user, cartId);
+    const userId = user[0]._id;
+    user[0].carts.push(cartId);
+    const respuesta = await userManager.updateCart(userId, user[0]);
+    console.log(respuesta);
   } catch (err) {
     res.status(500).json({
       message: "Error al agregar el carrito",

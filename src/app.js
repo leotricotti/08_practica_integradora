@@ -86,9 +86,9 @@ enviroment();
 
 // Routes
 app.use("/", LoginRouter);
-app.use("/addCartId", UserCart);
 app.use("/forgot", ForgotRouter);
 app.use("/signup", SignUpRouter);
+app.use("/api/userCart", UserCart);
 app.use("/api/carts", CartsRouter);
 app.use("/api/sessions", SessionsRouter);
 app.use("/api/products", ProductsRouter);
