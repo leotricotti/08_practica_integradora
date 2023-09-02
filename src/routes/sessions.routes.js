@@ -1,11 +1,16 @@
 import passport from "passport";
+import * as dotenv from "dotenv";
 import { Router } from "express";
 import { createHash } from "../utils.js";
 import User from "../dao/dbmanager/users.manager.js";
+import { generateToken, authToken } from "../utils.js";
 
-//Inicializa variables
+//Inicializa servicios
+dotenv.config();
 const router = Router();
 const usersManager = new User();
+// Clave secreta
+const PRIVATE_KEY = process.env.PRIVATE_KEY;
 
 //Ruta que realiza el login
 router.post(

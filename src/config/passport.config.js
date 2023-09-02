@@ -1,3 +1,4 @@
+import jwt from "passport-jwt";
 import passport from "passport";
 import * as dotenv from "dotenv";
 import local from "passport-local";
@@ -7,10 +8,40 @@ import { createHash, isValidPassword } from "../utils.js";
 
 // Inicializar servicios
 dotenv.config();
-const LocalStrategy = local.Strategy;
 const userManager = new User();
+const LocalStrategy = local.Strategy;
+const JWTStrategy = jwt.Strategy;
+const ExtractJWT = jwt.ExtractJwt;
+const COOKIE_KEY = process.env.COOKIE_KEY;
 
 const initializePassport = () => {
+  //Confogurar cookie extractor
+  const cookieExtractor = (req) => {
+    let token = null;
+    if (req && req.cookies) {
+      token = req.cookies["jwt"];
+    }
+    return token;
+  };
+
+  // Configurar passport para loguear usuarios con JWT
+  passport.use(
+    "jwt",
+    new JWTStrategy(
+      {
+        jwtFromRequest: ExtractJWT.fromExtractors([cookieExtractor]),
+        secretOrKey: COOKIE_KEY,
+      },
+      async (jwt_payload, done) => {
+        try {
+          return done(null, jwt_payload);
+        } catch (error) {
+          return done(error);
+        }
+      }
+    )
+  );
+
   // Configurar passport para registrar usuarios
   passport.use(
     "register",
