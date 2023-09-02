@@ -10,9 +10,9 @@ const filterProductsByCategory = async (category) => {
 
 //Guardar cartId en localStorage
 const saveCartId = (cartId) => {
-  if (!cartId) {
-    localStorage.setItem("cartId", cartId);
-  }
+  console.log(cartId);
+  const localId = localStorage.getItem("cartId");
+  if (!localId) localStorage.setItem("cartId", cartId);
 };
 
 //Obtener carrito
@@ -61,7 +61,7 @@ const addCartId = async () => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      cart: cartId,
+      cartId,
     }),
   });
   return response;
