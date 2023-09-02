@@ -9,8 +9,7 @@ router.post("/", async (req, res) => {
   const { cartId } = req.body;
   const username = req.session.user.email;
   try {
-    console.log(username, cartId);
-    const result = await userManager.addCart(username, cartId);
+    const result = await userManager.addCartId(username, cartId);
     res.status(200).json({
       respuesta: "Carrito agregado con éxito",
       data: result,

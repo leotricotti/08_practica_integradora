@@ -49,17 +49,4 @@ export default class User {
       return [];
     }
   };
-
-  //Metodo asyncrono que agrega el id de carrito al usuario
-  addCart = async (user, cart) => {
-    try {
-      const respuesta = await usersModel.findByIdAndUpdate(user, {
-        cart: cart,
-      });
-      return respuesta;
-    } catch (error) {
-      console.log(error);
-      return [];
-    }
-  };
 }
