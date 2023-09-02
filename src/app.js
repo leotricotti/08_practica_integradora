@@ -4,8 +4,6 @@ import passport from "passport";
 import * as dotenv from "dotenv";
 import __dirname from "./utils.js";
 import { Server } from "socket.io";
-import session from "express-session";
-import MongoStore from "connect-mongo";
 import cookieParser from "cookie-parser";
 import handlebars from "express-handlebars";
 import UserCart from "./routes/userCart.routes.js";
