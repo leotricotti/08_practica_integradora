@@ -13,7 +13,6 @@ const logout = async () => {
       showConfirmButton: false,
       timer: 2000,
     }).then(() => {
-      localStorage.removeItem("cartId");
       localStorage.removeItem("currentPage");
       window.location.href = "/";
     });

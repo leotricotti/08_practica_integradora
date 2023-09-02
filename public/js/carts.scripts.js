@@ -1,3 +1,20 @@
+//Ruta que agrega el id del carrito como referencia al usuario
+const addCartId = async () => {
+  const cartId = localStorage.getItem("cartId");
+  const response = await fetch("/api/userCart", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      cartId,
+    }),
+  });
+  return response;
+};
+
+console.log(localStorage.getItem("cartId"));
+
 //Incrementa la cantidad de un producto en el carrito
 const increaseQuantity = async (idProduct) => {
   const cartId = localStorage.getItem("cartId");
@@ -74,7 +91,7 @@ const continueBuying = (page) => {
 };
 
 //Finalizar compra
-const finishBuying = () => {
+const finishBuy = () => {
   Swal.fire({
     title: "¿Estás seguro?",
     text: "¡No podrás revertir esto!",
@@ -96,7 +113,10 @@ const finishBuying = () => {
         if (result.isConfirmed) {
           localStorage.removeItem("cartId");
           window.location.href = "/api/products?page=1";
-          deleteAllProducts();
+          addCartId();
+          setTimeout(() => {
+            localStorage.removeItem("cartId");
+          }, 2000);
         }
       });
     }
