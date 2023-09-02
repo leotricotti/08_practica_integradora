@@ -8,19 +8,41 @@ const filterProductsByCategory = async (category) => {
   return (window.location.href = `/api/products?category=${category}`);
 };
 
+//Función que crea el carrito si no existe
+const createCart = async () => {
+  if (localStorage.getItem("cartId")) {
+    return;
+  }
+  const response = await fetch("/api/carts", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      products: [],
+    }),
+  });
+  const result = await response.json();
+};
+
 //Guardar cartId en localStorage
 const saveCartId = (cartId) => {
-  if (!cartId) {
+  const localId = localStorage.getItem("cartId");
+  if (!localId) {
     localStorage.setItem("cartId", cartId);
   }
 };
 
 //Obtener carrito
 const getCartId = async () => {
-  const response = await fetch("http://localhost:3000/api/carts");
-  const carts = await response.json();
-  const lastCart = carts[carts.length - 1];
-  saveCartId(lastCart._id);
+  try {
+    const response = await fetch("http://localhost:3000/api/carts");
+    const carts = await response.json();
+    const lastCart = carts[carts.length - 1];
+    saveCartId(lastCart._id);
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 getCartId();
