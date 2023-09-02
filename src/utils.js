@@ -18,18 +18,18 @@ export const generateToken = (user) => {
   return token;
 };
 
-export const authToken = (req, res, next) => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader)
-    return res.status(401).json({ message: "No estas autorizado" });
+// export const authToken = (req, res, next) => {
+//   const authHeader = req.headers.authorization;
+//   if (!authHeader)
+//     return res.status(401).json({ message: "No estas autorizado" });
 
-  const token = authHeader.split(" ")[1];
-  jwt.verify(token, PRIVATE_KEY, (error, credentials) => {
-    if (error) return res.status(403).json({ message: "Token no valido" });
-    req.user = credentials.user;
-    next();
-  });
-};
+//   const token = authHeader.split(" ")[1];
+//   jwt.verify(token, PRIVATE_KEY, (error, credentials) => {
+//     if (error) return res.status(403).json({ message: "Token no valido" });
+//     req.user = credentials.user;
+//     next();
+//   });
+// };
 
 //Encriptar contraseña
 export const createHash = (password) =>

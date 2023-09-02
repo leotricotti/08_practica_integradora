@@ -1,9 +1,8 @@
 import passport from "passport";
 import * as dotenv from "dotenv";
 import { Router } from "express";
-import { createHash } from "../utils.js";
+import { createHash, generateToken } from "../utils.js";
 import User from "../dao/dbmanager/users.manager.js";
-import { generateToken, authToken } from "../utils.js";
 
 //Inicializa servicios
 dotenv.config();
@@ -11,6 +10,34 @@ const router = Router();
 const usersManager = new User();
 // Clave secreta
 const PRIVATE_KEY = process.env.PRIVATE_KEY;
+
+//Configurar current endpoint
+router.get(
+  "/current",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res) => {
+    res.send(req.user);
+  }
+);
+
+//Ruta que realiza el registro
+router.post(
+  "/signup",
+  passport.authenticate("register", {
+    passReqToCallback: true,
+    session: false,
+    failureRedirect: "/api/sessions/failRegister",
+    failureMessage: true,
+  }),
+  async (req, res) => {
+    res.status(200).json({ message: "Usuario creado con éxito" });
+  }
+);
+
+//Ruta que se ejecuta cuando falla el registro
+router.get("/failRegister", async (req, res) => {
+  res.status(500).json({ error: "Error al crear el ususario" });
+});
 
 //Ruta que realiza el login
 router.post(
@@ -35,22 +62,6 @@ router.post(
 //Ruta que se ejecuta cuando falla el login
 router.get("/failLogin", async (req, res) => {
   res.status(401).json({ message: "No se ha podido iniciar sesión" });
-});
-
-//Ruta que realiza el registro
-router.post(
-  "/signup",
-  passport.authenticate("register", {
-    failureRedirect: "/api/sessions/failRegister",
-  }),
-  async (req, res) => {
-    res.status(200).json({ message: "Usuario creado con éxito" });
-  }
-);
-
-//Ruta que se ejecuta cuando falla el registro
-router.get("/failRegister", async (req, res) => {
-  res.status(500).json({ error: "Error al crear el ususario" });
 });
 
 //Ruta que recupera la contraseña
