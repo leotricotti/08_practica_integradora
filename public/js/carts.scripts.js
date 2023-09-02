@@ -1,20 +1,3 @@
-//Función que crea el carrito si no existe
-const createCart = async () => {
-  if (localStorage.getItem("cartId")) {
-    return;
-  }
-  const response = await fetch("/api/carts", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      products: [],
-    }),
-  });
-  const result = await response.json();
-};
-
 //Incrementa la cantidad de un producto en el carrito
 const increaseQuantity = async (idProduct) => {
   const cartId = localStorage.getItem("cartId");
@@ -90,6 +73,19 @@ const continueBuying = (page) => {
   window.location.href = `/api/products?page=${page}`;
 };
 
+//Cerrar sesión
+const logoutBuy = async () => {
+  const response = await fetch("/api/sessions/logout", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  window.location.href = "/";
+  localStorage.removeItem("cartId");
+  return response;
+};
+
 //Finalizar compra
 const finishBuy = () => {
   Swal.fire({
@@ -104,14 +100,13 @@ const finishBuy = () => {
   }).then((result) => {
     if (result.isConfirmed) {
       Swal.fire({
-        title: "¡Compra finalizada!",
-        text: "¡Gracias por tu compra!",
+        title: "¡Compra finalizada con éxito!",
+        text: "En unos minutos recibirás un correo con los detalles de tu compra",
         icon: "success",
-        confirmButtonColor: "#3085d6",
-        confirmButtonText: "Aceptar",
+        showConfirmButton: false,
+        timer: 1800,
       }).then(() => {
-        deleteAllProducts();
-        localStorage.removeItem("cartId");
+        logoutBuy();
       });
     }
   });
