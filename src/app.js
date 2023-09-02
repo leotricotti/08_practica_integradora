@@ -52,24 +52,9 @@ app.engine(
   })
 );
 
-// Connect to MongoDB
-app.use(
-  session({
-    store: MongoStore.create({
-      mongoUrl: MONGO_URI,
-      mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
-      ttl: 30 * 60,
-    }),
-    secret: "codersecret",
-    resave: false,
-    saveUninitialized: false,
-  })
-);
-
 // Passport
 githubStrategy();
 initializePassport();
-app.use(passport.session());
 app.use(passport.initialize());
 
 // Conexión respuesta de la base de datos
