@@ -52,7 +52,6 @@ export default class User {
 
   //Método asyncrono para actualizar el carrito
   updateCart = async (id, user) => {
-    console.log(id, user);
     try {
       const respuesta = await usersModel.findByIdAndUpdate(id, user);
       return respuesta;
