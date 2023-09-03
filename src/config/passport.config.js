@@ -76,35 +76,6 @@ const initializePassport = () => {
     )
   );
 
-  // Configurar passport para loguear usuarios
-  passport.use(
-    "login",
-    new LocalStrategy(
-      {
-        passReqToCallback: true,
-        usernameField: "username",
-        passwordField: "password",
-      },
-      async (req, username, password, done) => {
-        try {
-          const user = await userManager.getOne(username);
-          if (user.length === 0) {
-            return done(null, false, {
-              message: "El usuario no existe",
-            });
-          }
-          if (!isValidPassword(user[0].password, password)) {
-            return done(null, false, { message: "Contraseña incorrecta" });
-          } else {
-            return done(null, user);
-          }
-        } catch (error) {
-          return done("Error al obtener el usuario", error);
-        }
-      }
-    )
-  );
-
   // Serializar y deserializar usuarios
   passport.serializeUser((user, done) => {
     done(null, user[0].email);

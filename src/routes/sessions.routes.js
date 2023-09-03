@@ -40,32 +40,21 @@ router.get("/failRegister", async (req, res) => {
 });
 
 //Ruta que realiza el login
-router.post(
-  "/login",
-  passport.authenticate("login", {
-    failureRedirect: "/api/sessions/failLogin",
-  }),
-  (req, res) => {
-    const { username, password } = req.body;
-    if (!username || !password) {
-      return res.status(400).json("Faltan datos");
-    }
-    const result = usersManager.getOne(username);
-    if (result.length > 0) {
-      const myToken = generateToken({ username, password, role });
-      res.cookie("token", myToken, {
-        maxAge: 1000 * 60 * 60,
-      });
-      res.status(200).json({ message: "Usuario logueado con éxito" });
-    } else {
-      res.status(401).json({ message: "Usuario o contraseña incorrectos" });
-    }
+router.post("/login", (req, res) => {
+  const { username, password } = req.body;
+  if (!username || !password) {
+    return res.status(400).json("Faltan datos");
   }
-);
-
-//Ruta que se ejecuta cuando falla el login
-router.get("/failLogin", async (req, res) => {
-  res.status(401).json({ message: "No se ha podido iniciar sesión" });
+  const result = usersManager.getOne(username);
+  if (result.length > 0) {
+    const myToken = generateToken({ username, password, role });
+    res.cookie("token", myToken, {
+      maxAge: 1000 * 60 * 60,
+    });
+    res.status(200).json({ message: "Usuario logueado con éxito" });
+  } else {
+    res.status(401).json({ message: "Usuario o contraseña incorrectos" });
+  }
 });
 
 //Ruta que recupera la contraseña
@@ -88,15 +77,15 @@ router.post("/forgot", async (req, res) => {
   }
 });
 
-//Ruta que cierra la sesión
-const handleLogout = (req, res) => {
-  req.logout(() => {
-    req.session.destroy();
-    res.redirect("/");
-  });
-};
+// //Ruta que cierra la sesión
+// const handleLogout = (req, res) => {
+//   req.logout(() => {
+//     req.session.destroy();
+//     res.redirect("/");
+//   });
+// };
 
-router.get("/logout", handleLogout);
+// router.get("/logout", handleLogout);
 
 //Ruta que realiza el login con github
 router.get(

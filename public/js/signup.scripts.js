@@ -33,38 +33,23 @@ async function postSignup(first_name, last_name, age, username, password) {
 
   const result = await response.json();
 
-  if (response.status === 200) {
+  if (result.error) {
+    Swal.fire({
+      icon: "error",
+      title: "Oops...",
+      text: result.error,
+    });
+    return false;
+  } else {
     Swal.fire({
       icon: "success",
       title: "Usuario creado correctamente",
       showConfirmButton: false,
       timer: 1500,
+    }).then(() => {
+      moveToLogin();
     });
-    moveToLogin();
-  } else if (response.status === 500) {
-    Swal.fire({
-      icon: "error",
-      title: "Oops...",
-      text: "El usuario ya existe.",
-      showConfirmButton: true,
-      confirmButtonText: "Recuperar contraseña",
-      showCancelButton: true,
-      cancelButtonText: "Cancelar",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        moveToForgot();
-      } else if (result.isDenied) {
-        moveToRegister();
-      }
-    });
-    return false;
-  } else {
-    Swal.fire({
-      icon: "error",
-      title: "Oops...",
-      text: "Error al crear el usuario",
-    });
-    return false;
+    return true;
   }
 }
 

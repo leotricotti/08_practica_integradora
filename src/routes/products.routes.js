@@ -11,10 +11,9 @@ const productsManager = new Product();
 router.get("/", async (req, res) => {
   const { limit, page, sort, category } = req.query;
   try {
-    const user = await usersManager.getOne(sessionUser);
     const response = await productsManager.getAll();
     if (limit) {
-      let tempArray = response.slice(0, limit);
+      const tempArray = response.slice(0, limit);
       res.render("products", {
         products: tempArray,
         styles: "products.styles.css",
