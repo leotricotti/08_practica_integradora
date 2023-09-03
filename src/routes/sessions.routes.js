@@ -1,6 +1,6 @@
 import passport from "passport";
 import { Router } from "express";
-import { createHash } from "../utils.js";
+import { createHash, generateToken, authenticateToken } from "../utils.js";
 import User from "../dao/dbmanager/users.manager.js";
 
 //Inicializa variables
@@ -23,6 +23,7 @@ router.post(
       email: req.user[0].email,
       age: req.user[0].age,
     };
+    const accestoken = generateToken(req.user);
     res.status(200).json({ message: "Usuario logueado con éxito" });
   }
 );
@@ -39,6 +40,7 @@ router.post(
     failureRedirect: "/api/sessions/failRegister",
   }),
   async (req, res) => {
+    const accestoken = generateToken(req.user);
     res.status(200).json({ message: "Usuario creado con éxito" });
   }
 );
