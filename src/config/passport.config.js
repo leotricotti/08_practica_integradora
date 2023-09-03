@@ -1,4 +1,3 @@
-import jwt from "passport-jwt";
 import passport from "passport";
 import * as dotenv from "dotenv";
 import local from "passport-local";
@@ -8,40 +7,10 @@ import { createHash, isValidPassword } from "../utils.js";
 
 // Inicializar servicios
 dotenv.config();
-const userManager = new User();
 const LocalStrategy = local.Strategy;
-const JWTStrategy = jwt.Strategy;
-const ExtractJWT = jwt.ExtractJwt;
-const COOKIE_KEY = process.env.COOKIE_KEY;
-
-//Confogurar cookie extractor
-const cookieExtractor = (req) => {
-  let token = null;
-  if (req && req.cookies) {
-    token = req.cookies["jwt"];
-  }
-  return token;
-};
+const userManager = new User();
 
 const initializePassport = () => {
-  // Configurar passport para loguear usuarios con JWT
-  passport.use(
-    "jwt",
-    new JWTStrategy(
-      {
-        jwtFromRequest: ExtractJWT.fromExtractors([cookieExtractor]),
-        secretOrKey: COOKIE_KEY,
-      },
-      async (jwt_payload, done) => {
-        try {
-          return done(null, jwt_payload);
-        } catch (error) {
-          return done(error);
-        }
-      }
-    )
-  );
-
   // Configurar passport para registrar usuarios
   passport.use(
     "register",
@@ -68,6 +37,35 @@ const initializePassport = () => {
             };
             let result = await userManager.signup(newUser);
             return done(null, result);
+          }
+        } catch (error) {
+          return done("Error al obtener el usuario", error);
+        }
+      }
+    )
+  );
+
+  // Configurar passport para loguear usuarios
+  passport.use(
+    "login",
+    new LocalStrategy(
+      {
+        passReqToCallback: true,
+        usernameField: "username",
+        passwordField: "password",
+      },
+      async (req, username, password, done) => {
+        try {
+          const user = await userManager.getOne(username);
+          if (user.length === 0) {
+            return done(null, false, {
+              message: "El usuario no existe",
+            });
+          }
+          if (!isValidPassword(user[0].password, password)) {
+            return done(null, false, { message: "Contraseña incorrecta" });
+          } else {
+            return done(null, user);
           }
         } catch (error) {
           return done("Error al obtener el usuario", error);
