@@ -1,8 +1,8 @@
 import passport from "passport";
 import * as dotenv from "dotenv";
 import { Router } from "express";
-import { createHash, generateToken } from "../utils.js";
 import User from "../dao/dbmanager/users.manager.js";
+import { createHash, generateToken } from "../utils.js";
 
 //Inicializa servicios
 dotenv.config();
@@ -50,19 +50,12 @@ router.post(
     if (!username || !password) {
       return res.status(400).json("Faltan datos");
     }
-    if (username && password) {
-      req.session.user = {
-        first_name: req.user[0].first_name,
-        last_name: req.user[0].last_name,
-        email: req.user[0].email,
-        age: req.user[0].age,
-      };
-
-      const myToken = generateToken({ username, password });
+    const result = usersManager.getOne(username);
+    if (result.length > 0) {
+      const myToken = generateToken({ username, password, role });
       res.cookie("token", myToken, {
         maxAge: 1000 * 60 * 60,
       });
-      req;
       res.status(200).json({ message: "Usuario logueado con éxito" });
     } else {
       res.status(401).json({ message: "Usuario o contraseña incorrectos" });

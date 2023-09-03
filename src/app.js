@@ -36,18 +36,6 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
-app.use(
-  session({
-    store: MongoStore.create({
-      mongoUrl: MONGO_URI,
-      mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
-      ttl: 30 * 60,
-    }),
-    secret: "codersecret",
-    resave: false,
-    saveUninitialized: false,
-  })
-);
 
 // Handlebars
 app.set("view engine", "handlebars");
