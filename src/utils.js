@@ -13,10 +13,10 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 //Encriptar contraseña
-export const createHash = (password) =>
+const createHash = (password) =>
   bcrypt.hashSync(password, bcrypt.genSaltSync(10));
 
-export const isValidPassword = (savedPassword, password) => {
+const isValidPassword = (savedPassword, password) => {
   return bcrypt.compareSync(password, savedPassword);
 };
 
@@ -27,7 +27,7 @@ export const generateToken = (user) => {
 };
 
 //Autenticar token
-export const authenticateToken = (req, res, next) => {
+const authenticateToken = (req, res, next) => {
   const token = req.cookies["jwt"];
   if (!token) return res.status(401).send({ error: "No estas autorizado" });
   const myToken = token.split(" ")[1];
@@ -39,4 +39,34 @@ export const authenticateToken = (req, res, next) => {
   });
 };
 
-export default __dirname;
+const passportCall = (strategy) => {
+  return async (req, res, next) => {
+    passport.authenticate(strategy, function (error, user, info) {
+      if (error) return next(error);
+      if (!user)
+        return res.status(401).json({
+          error: info.messages ? info.messages : info.toString(),
+        });
+      req.user = user;
+      next();
+    })(req, res, next);
+  };
+};
+
+const authorization = (role) => {
+  return async (req, res, next) => {
+    if (!req.user) return res.status(401).send({ error: "Unauthorized" });
+    if (req.user.role != role)
+      return res.status(403).send({ error: "No permissions" });
+    next();
+  };
+};
+
+export {
+  __dirname,
+  authorization,
+  authenticateToken,
+  createHash,
+  isValidPassword,
+  passportCall,
+};
