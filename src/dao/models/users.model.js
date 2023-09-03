@@ -13,8 +13,11 @@ const userSchema = new mongoose.Schema({
       {
         type: mongoose.SchemaTypes.ObjectId,
         ref: "carts",
+        unique: true,
+        sparse: true,
       },
     ],
+    default: [],
   },
   role: {
     type: String,
