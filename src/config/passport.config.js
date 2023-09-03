@@ -47,79 +47,6 @@ const initializePassport = () => {
       }
     )
   );
-
-  // Configurar passport para registrar usuarios
-  passport.use(
-    "register",
-    new LocalStrategy(
-      {
-        passReqToCallback: true,
-        usernameField: "email",
-      },
-      async (req, username, password, done) => {
-        const { first_name, last_name, email, age } = req.body;
-        try {
-          const user = await userManager.getOne(username);
-          if (user.length > 0) {
-            return done(null, false, {
-              message: "Error al crear el usuario. El usuario ya existe",
-            });
-          } else {
-            const newUser = {
-              first_name,
-              last_name,
-              email,
-              age,
-              password: createHash(password),
-            };
-            let result = await userManager.signup(newUser);
-            return done(null, result);
-          }
-        } catch (error) {
-          return done("Error al obtener el usuario", error);
-        }
-      }
-    )
-  );
-
-  // Configurar passport para loguear usuarios
-  passport.use(
-    "login",
-    new LocalStrategy(
-      {
-        passReqToCallback: true,
-        usernameField: "username",
-        passwordField: "password",
-      },
-      async (req, username, password, done) => {
-        try {
-          const user = await userManager.getOne(username);
-          if (user.length === 0) {
-            return done(null, false, {
-              message: "El usuario no existe",
-            });
-          }
-          if (!isValidPassword(user[0].password, password)) {
-            return done(null, false, { message: "Contraseña incorrecta" });
-          } else {
-            return done(null, user);
-          }
-        } catch (error) {
-          return done("Error al obtener el usuario", error);
-        }
-      }
-    )
-  );
-
-  // Serializar y deserializar usuarios
-  passport.serializeUser((user, done) => {
-    done(null, user[0].email);
-  });
-
-  passport.deserializeUser(async (id, done) => {
-    let user = await userManager.getOne(id);
-    done(null, user);
-  });
 };
 
 // Configurar passport para loguear usuarios con github
@@ -154,16 +81,6 @@ const githubStrategy = () => {
       }
     )
   );
-
-  // Serializar y deserializar usuarios
-  passport.serializeUser((user, done) => {
-    done(null, user.email);
-  });
-
-  passport.deserializeUser(async (id, done) => {
-    let user = await userManager.getOne(id);
-    done(null, user);
-  });
 };
 
 export { initializePassport, githubStrategy };
