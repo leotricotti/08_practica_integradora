@@ -4,6 +4,8 @@ import passport from "passport";
 import * as dotenv from "dotenv";
 import __dirname from "./utils.js";
 import { Server } from "socket.io";
+import session from "express-session";
+import MongoStore from "connect-mongo";
 import cookieParser from "cookie-parser";
 import handlebars from "express-handlebars";
 import UserCart from "./routes/userCart.routes.js";
@@ -30,10 +32,22 @@ const PORT = process.env.PORT || 3002;
 const MONGO_URI = process.env.MONGO_URI;
 
 // Middlewares
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.static("public"));
-app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
+app.use(
+  session({
+    store: MongoStore.create({
+      mongoUrl: MONGO_URI,
+      mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
+      ttl: 30 * 60,
+    }),
+    secret: "codersecret",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
 
 // Handlebars
 app.set("view engine", "handlebars");
