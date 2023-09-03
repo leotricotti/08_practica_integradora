@@ -45,17 +45,28 @@ router.post(
   passport.authenticate("login", {
     failureRedirect: "/api/sessions/failLogin",
   }),
-  async (req, res) => {
-    if (!req.user) {
-      return res.status(401).json("Error de autenticacion");
+  (req, res) => {
+    const { username, password } = req.body;
+    if (!username || !password) {
+      return res.status(400).json("Faltan datos");
     }
-    req.session.user = {
-      first_name: req.user[0].first_name,
-      last_name: req.user[0].last_name,
-      email: req.user[0].email,
-      age: req.user[0].age,
-    };
-    res.status(200).json({ message: "Usuario logueado con éxito" });
+    if (username && password) {
+      req.session.user = {
+        first_name: req.user[0].first_name,
+        last_name: req.user[0].last_name,
+        email: req.user[0].email,
+        age: req.user[0].age,
+      };
+
+      const myToken = generateToken({ username, password });
+      res.cookie("token", myToken, {
+        maxAge: 1000 * 60 * 60,
+      });
+      req;
+      res.status(200).json({ message: "Usuario logueado con éxito" });
+    } else {
+      res.status(401).json({ message: "Usuario o contraseña incorrectos" });
+    }
   }
 );
 
