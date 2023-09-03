@@ -28,7 +28,7 @@ export const generateToken = (user) => {
 
 //Autenticar token
 export const authenticateToken = (req, res, next) => {
-  const token = req.cookies["token"];
+  const token = req.cookies["jwt"];
   if (!token) return res.status(401).send({ error: "No estas autorizado" });
   const myToken = token.split(" ")[1];
 

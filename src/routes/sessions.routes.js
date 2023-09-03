@@ -1,7 +1,7 @@
 import passport from "passport";
 import { Router } from "express";
-import { createHash, generateToken, authenticateToken } from "../utils.js";
 import User from "../dao/dbmanager/users.manager.js";
+import { createHash, generateToken } from "../utils.js";
 
 //Inicializa variables
 const router = Router();
@@ -17,13 +17,9 @@ router.post(
     if (!req.user) {
       return res.status(401).json("Error de autenticacion");
     }
-    req.session.user = {
-      first_name: req.user[0].first_name,
-      last_name: req.user[0].last_name,
-      email: req.user[0].email,
-      age: req.user[0].age,
-    };
-    const accestoken = generateToken(req.user);
+    const { username, role } = req.user[0];
+    const accestoken = generateToken({ username, role });
+    res.cookie("jwt", accestoken, { httpOnly: true, secure: false });
     res.status(200).json({ message: "Usuario logueado con éxito" });
   }
 );
@@ -98,6 +94,14 @@ router.get(
     req.session.user = req.user;
     res.redirect("/api/products?page=1");
   }
+);
+
+//Ruta que obtine el usuario logueado del token
+router.get(
+  "/current",
+  passport.authenticate("jwt", { session: false }, (req, res) => {
+    res.send(req.user);
+  })
 );
 
 export default router;

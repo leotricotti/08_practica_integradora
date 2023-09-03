@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { authenticateToken } from "../utils.js";
 import User from "../dao/dbmanager/users.manager.js";
 import Product from "../dao/dbmanager/products.manager.js";
 
@@ -11,10 +12,7 @@ const productsManager = new Product();
 router.get("/", async (req, res) => {
   const { limit, page, sort, category } = req.query;
   try {
-    if (req.session.user.email === "adminCoder@coder.com") {
-      req.session.admin = true;
-    }
-    const sessionUser = req.session.user[0]?.email ?? req.session.user.email;
+    const sessionUser = req.cookies["jwt"];
     const user = await usersManager.getOne(sessionUser);
     const admin = req.session.admin;
     const response = await productsManager.getAll();
