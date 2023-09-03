@@ -34,11 +34,8 @@ const MONGO_URI = process.env.MONGO_URI;
 // Middlewares
 app.use(cookieParser());
 app.use(express.json());
-app.use(express.static("public"));
-<<<<<<< HEAD
-=======
 app.use(cookieParser());
->>>>>>> principal
+app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 
 // Handlebars
