@@ -11,8 +11,13 @@ router.post("/", async (req, res) => {
   try {
     const user = await userManager.getOne(username);
     const userId = user[0]._id;
-    user[0].carts.push(cartId);
-    const respuesta = await userManager.updateCart(userId, user[0]);
+    const cartExist = user[0].carts.find((cart) => cart == cartId);
+    if (!cartExist) {
+      user[0].carts.push(cartId);
+      const respuesta = await userManager.updateCart(userId, user[0]);
+    } else {
+      return false;
+    }
   } catch (err) {
     res.status(500).json({
       message: "Error al agregar el carrito",
