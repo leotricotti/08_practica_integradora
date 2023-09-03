@@ -2,10 +2,8 @@ import express from "express";
 import mongoose from "mongoose";
 import passport from "passport";
 import * as dotenv from "dotenv";
-import __dirname from "./utils.js";
+import { __dirname } from "./utils.js";
 import { Server } from "socket.io";
-import session from "express-session";
-import MongoStore from "connect-mongo";
 import cookieParser from "cookie-parser";
 import handlebars from "express-handlebars";
 import UserCart from "./routes/userCart.routes.js";
@@ -52,24 +50,9 @@ app.engine(
   })
 );
 
-// Connect to MongoDB
-app.use(
-  session({
-    store: MongoStore.create({
-      mongoUrl: MONGO_URI,
-      mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
-      ttl: 30 * 60,
-    }),
-    secret: "codersecret",
-    resave: false,
-    saveUninitialized: false,
-  })
-);
-
 // Passport
 githubStrategy();
 initializePassport();
-app.use(passport.session());
 app.use(passport.initialize());
 
 // Conexión respuesta de la base de datos
