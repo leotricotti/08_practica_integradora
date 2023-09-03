@@ -74,7 +74,7 @@ const continueBuying = (page) => {
 };
 
 //Finalizar compra
-const finishBuying = () => {
+const finishBuy = () => {
   Swal.fire({
     title: "¿Estás seguro?",
     text: "¡No podrás revertir esto!",
@@ -95,8 +95,8 @@ const finishBuying = () => {
       }).then((result) => {
         if (result.isConfirmed) {
           localStorage.removeItem("cartId");
-          window.location.href = "/api/products?page=1";
-          deleteAllProducts();
+          window.location.href = "/";
+          logout();
         }
       });
     }
