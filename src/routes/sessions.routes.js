@@ -1,7 +1,7 @@
 import passport from "passport";
 import { Router } from "express";
-import User from "../dao/dbmanager/users.manager.js";
 import { createHash } from "../utils.js";
+import User from "../dao/dbmanager/users.manager.js";
 
 //Inicializa variables
 const router = Router();
@@ -17,6 +17,7 @@ router.post(
     if (!req.user) {
       return res.status(401).json("Error de autenticacion");
     }
+    console.log(req.user[0].role);
     req.session.user = {
       first_name: req.user[0].first_name,
       last_name: req.user[0].last_name,
