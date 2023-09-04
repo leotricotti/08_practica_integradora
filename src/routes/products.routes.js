@@ -12,6 +12,7 @@ router.get("/", async (req, res) => {
   const { limit, page, sort, category } = req.query;
   try {
     const role = req.session.user[0]?.role ?? req.session.user.role;
+    console.log(role);
     const sessionUser = req.session.user[0]?.email ?? req.session.user.email;
     const user = await usersManager.getOne(sessionUser);
     const response = await productsManager.getAll();
@@ -21,7 +22,7 @@ router.get("/", async (req, res) => {
         products: tempArray,
         styles: "products.styles.css",
         user: user[0].first_name,
-        // admin: role === "admin" ? true : false,
+        admin: role,
       });
     } else if (category) {
       let filteredProducts = await productsManager.filteredProducts(category);
@@ -29,7 +30,7 @@ router.get("/", async (req, res) => {
         products: filteredProducts.docs,
         styles: "products.styles.css",
         user: user[0].first_name,
-        // admin: role === "admin" ? true : false,
+        admin: role,
       });
     } else if (sort) {
       let orderedProducts = await productsManager.orderedProducts(sort);
@@ -37,7 +38,7 @@ router.get("/", async (req, res) => {
         products: orderedProducts,
         styles: "products.styles.css",
         user: user[0].first_name,
-        // admin: role === "admin" ? true : false,
+        admin: role,
       });
     } else {
       let paginatedProducts = await productsManager.paginatedProducts(page);
@@ -45,7 +46,7 @@ router.get("/", async (req, res) => {
         products: paginatedProducts.docs,
         styles: "products.styles.css",
         user: user[0].first_name,
-        // admin: role === "admin" ? true : false,
+        admin: role,
       });
     }
   } catch (err) {

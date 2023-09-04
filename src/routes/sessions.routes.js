@@ -2,34 +2,12 @@ import passport from "passport";
 import * as dotenv from "dotenv";
 import { Router } from "express";
 import User from "../dao/dbmanager/users.manager.js";
-import { createHash, generateToken } from "../utils.js";
+import { createHash } from "../utils.js";
 
 //Inicializa servicios
 dotenv.config();
 const router = Router();
 const usersManager = new User();
-// Clave secreta
-const PRIVATE_KEY = process.env.PRIVATE_KEY;
-
-//Configurar current endpoint
-router.get(
-  "/current",
-  passport.authenticate("jwt", { session: false }),
-  async (req, res) => {
-    if (!req.user) {
-      return res.status(401).json("Error de autenticacion");
-    }
-    console.log(req.user[0].role);
-    req.session.user = {
-      first_name: req.user[0].first_name,
-      last_name: req.user[0].last_name,
-      email: req.user[0].email,
-      age: req.user[0].age,
-      role: req.user[0].role,
-    };
-    res.status(200).json({ message: "Usuario logueado con éxito" });
-  }
-);
 
 //Ruta que realiza el registro
 router.post(
@@ -88,15 +66,15 @@ router.post("/forgot", async (req, res) => {
   }
 });
 
-// //Ruta que cierra la sesión
-// const handleLogout = (req, res) => {
-//   req.logout(() => {
-//     req.session.destroy();
-//     res.redirect("/");
-//   });
-// };
+//Ruta que cierra la sesión
+const handleLogout = (req, res) => {
+  req.logout(() => {
+    req.session.destroy();
+    res.redirect("/");
+  });
+};
 
-// router.get("/logout", handleLogout);
+router.get("/logout", handleLogout);
 
 //Ruta que realiza el login con github
 router.get(
