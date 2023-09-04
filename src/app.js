@@ -6,7 +6,6 @@ import __dirname from "./utils.js";
 import { Server } from "socket.io";
 import session from "express-session";
 import MongoStore from "connect-mongo";
-import cookieParser from "cookie-parser";
 import handlebars from "express-handlebars";
 import UserCart from "./routes/userCart.routes.js";
 import CartsRouter from "./routes/carts.routes.js";

@@ -11,6 +11,9 @@ const productsManager = new Product();
 router.get("/", async (req, res) => {
   const { limit, page, sort, category } = req.query;
   try {
+    const role = req.session.user[0]?.role ?? req.session.user.role;
+    const sessionUser = req.session.user[0]?.email ?? req.session.user.email;
+    const user = await usersManager.getOne(sessionUser);
     const response = await productsManager.getAll();
     if (limit) {
       const tempArray = response.slice(0, limit);
@@ -18,7 +21,7 @@ router.get("/", async (req, res) => {
         products: tempArray,
         styles: "products.styles.css",
         user: user[0].first_name,
-        admin: admin || false,
+        // admin: role === "admin" ? true : false,
       });
     } else if (category) {
       let filteredProducts = await productsManager.filteredProducts(category);
@@ -26,7 +29,7 @@ router.get("/", async (req, res) => {
         products: filteredProducts.docs,
         styles: "products.styles.css",
         user: user[0].first_name,
-        admin: admin || false,
+        // admin: role === "admin" ? true : false,
       });
     } else if (sort) {
       let orderedProducts = await productsManager.orderedProducts(sort);
@@ -34,7 +37,7 @@ router.get("/", async (req, res) => {
         products: orderedProducts,
         styles: "products.styles.css",
         user: user[0].first_name,
-        admin: admin || false,
+        // admin: role === "admin" ? true : false,
       });
     } else {
       let paginatedProducts = await productsManager.paginatedProducts(page);
@@ -42,12 +45,12 @@ router.get("/", async (req, res) => {
         products: paginatedProducts.docs,
         styles: "products.styles.css",
         user: user[0].first_name,
-        admin: admin || false,
+        // admin: role === "admin" ? true : false,
       });
     }
   } catch (err) {
     res.json({
-      message: "Error al obtener los productos. Por favor refresque la página.",
+      message: "Error al obtener los productos.",
       data: err,
     });
   }

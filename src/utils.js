@@ -1,9 +1,10 @@
 import bcrypt from "bcrypt";
+import bcrypt from "bcrypt";
 import { dirname } from "path";
-import jwt from "jsonwebtoken";
 import * as dotenv from "dotenv";
 import { fileURLToPath } from "url";
 
+//Variables
 dotenv.config();
 
 //Rutas de archivos

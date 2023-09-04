@@ -103,10 +103,14 @@ const finishBuy = () => {
         title: "¡Compra finalizada con éxito!",
         text: "En unos minutos recibirás un correo con los detalles de tu compra",
         icon: "success",
-        showConfirmButton: false,
-        timer: 1800,
-      }).then(() => {
-        logoutBuy();
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "Aceptar",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          localStorage.removeItem("cartId");
+          window.location.href = "/";
+          logout();
+        }
       });
     }
   });
