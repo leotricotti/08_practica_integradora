@@ -13,10 +13,7 @@ const usersManager = new User();
 router.post(
   "/signup",
   passport.authenticate("register", {
-    passReqToCallback: true,
-    session: false,
     failureRedirect: "/api/sessions/failRegister",
-    failureMessage: true,
   }),
   async (req, res) => {
     res.status(200).json({ message: "Usuario creado con éxito" });
@@ -29,22 +26,26 @@ router.get("/failRegister", async (req, res) => {
 });
 
 //Ruta que realiza el login
-router.post("/login", (req, res) => {
-  const { username, password } = req.body;
-  if (!username || !password) {
-    return res.status(400).json("Faltan datos");
-  }
-  const result = usersManager.getOne(username);
-  if (result.length > 0) {
-    const myToken = generateToken({ username, password, role });
-    res.cookie("token", myToken, {
-      maxAge: 1000 * 60 * 60,
-    });
+router.post(
+  "/login",
+  passport.authenticate("login", {
+    failureRedirect: "/api/sessions/failLogin",
+  }),
+  async (req, res) => {
+    if (!req.user) {
+      return res.status(401).json("Error de autenticacion");
+    }
+    console.log(req.user[0].role);
+    req.session.user = {
+      first_name: req.user[0].first_name,
+      last_name: req.user[0].last_name,
+      email: req.user[0].email,
+      age: req.user[0].age,
+      role: req.user[0].role,
+    };
     res.status(200).json({ message: "Usuario logueado con éxito" });
-  } else {
-    res.status(401).json({ message: "Usuario o contraseña incorrectos" });
   }
-});
+);
 
 //Ruta que recupera la contraseña
 router.post("/forgot", async (req, res) => {
