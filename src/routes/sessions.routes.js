@@ -17,6 +17,13 @@ router.post(
     if (!req.user) {
       return res.status(401).json("Error de autenticacion");
     }
+    req.session.user = {
+      first_name: req.user[0].first_name,
+      last_name: req.user[0].last_name,
+      email: req.user[0].email,
+      age: req.user[0].age,
+      role: req.user[0].role,
+    };
     res.status(200).json({ message: "Usuario logueado con éxito" });
   }
 );
@@ -33,7 +40,6 @@ router.post(
     failureRedirect: "/api/sessions/failRegister",
   }),
   async (req, res) => {
-    const accestoken = generateToken(req.user);
     res.status(200).json({ message: "Usuario creado con éxito" });
   }
 );
@@ -91,14 +97,6 @@ router.get(
     req.session.user = req.user;
     res.redirect("/api/products?page=1");
   }
-);
-
-//Ruta que obtine el usuario logueado del token
-router.get(
-  "/current",
-  passport.authenticate("jwt", { session: false }, (req, res) => {
-    res.send(req.user);
-  })
 );
 
 export default router;
