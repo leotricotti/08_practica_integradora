@@ -17,9 +17,6 @@ router.post(
     if (!req.user) {
       return res.status(401).json("Error de autenticacion");
     }
-    console.log(req.user);
-    const accestoken = generateToken({});
-    res.cookie("jwt", accestoken, { httpOnly: true, secure: false });
     res.status(200).json({ message: "Usuario logueado con éxito" });
   }
 );
