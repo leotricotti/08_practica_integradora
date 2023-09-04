@@ -1,6 +1,4 @@
-import jwt from "passport-jwt";
 import passport from "passport";
-import * as dotenv from "dotenv";
 import local from "passport-local";
 import GitHubStrategy from "passport-github2";
 import User from "../dao/dbmanager/users.manager.js";
@@ -9,10 +7,7 @@ import { createHash, isValidPassword } from "../utils.js";
 // Inicializar servicios
 dotenv.config();
 const userManager = new User();
-const JwtStrategy = jwt.Strategy;
-const ExtractJwt = jwt.ExtractJwt;
 const LocalStrategy = local.Strategy;
-const PRIVATE_KEY = process.env.PRIVATE_KEY;
 
 const initializePassport = () => {
   // Configurar passport para registrar usuarios

@@ -6,7 +6,6 @@ import { fileURLToPath } from "url";
 
 //Variables
 dotenv.config();
-const PRIVATE_KEY = process.env.PRIVATE_KEY;
 
 //Rutas de archivos
 const __filename = fileURLToPath(import.meta.url);
