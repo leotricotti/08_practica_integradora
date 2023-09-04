@@ -73,29 +73,6 @@ const addProduct = async (idProduct) => {
   }
 };
 
-//Ruta que agrega el id del carrito como referencia al usuario
-const addCartId = async () => {
-  return new Promise(async (resolve, reject) => {
-    let cartId = localStorage.getItem("cartId");
-    while (!cartId) {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      cartId = localStorage.getItem("cartId");
-    }
-    const response = await fetch("/api/userCart", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        cartId,
-      }),
-    });
-    resolve(response);
-  });
-};
-
-addCartId();
-
 //Obtener cartId de localStorage y asignarlo a la ruta del carrito
 const setCartRoute = () => {
   const cartRoute = document
