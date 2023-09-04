@@ -1,7 +1,7 @@
 import passport from "passport";
 import { Router } from "express";
 import User from "../dao/dbmanager/users.manager.js";
-import { createHash, generateToken } from "../utils.js";
+import { createHash } from "../utils.js";
 
 //Inicializa variables
 const router = Router();

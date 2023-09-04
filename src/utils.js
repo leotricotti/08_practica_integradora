@@ -1,5 +1,4 @@
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 import { dirname } from "path";
 import * as dotenv from "dotenv";
 import { fileURLToPath } from "url";

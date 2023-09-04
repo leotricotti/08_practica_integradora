@@ -5,7 +5,6 @@ import User from "../dao/dbmanager/users.manager.js";
 import { createHash, isValidPassword } from "../utils.js";
 
 // Inicializar servicios
-dotenv.config();
 const userManager = new User();
 const LocalStrategy = local.Strategy;
 
