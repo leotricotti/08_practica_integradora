@@ -1,12 +1,17 @@
 import passport from "passport";
+import * as dotenv from "dotenv";
 import local from "passport-local";
 import GitHubStrategy from "passport-github2";
 import User from "../dao/dbmanager/users.manager.js";
 import { createHash, isValidPassword } from "../utils.js";
 
 // Inicializar servicios
+dotenv.config();
 const userManager = new User();
 const LocalStrategy = local.Strategy;
+
+const ADMIN_ID = process.env.ADMIN_ID;
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 
 const initializePassport = () => {
   // Configurar passport para registrar usuarios
