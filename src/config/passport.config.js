@@ -24,6 +24,12 @@ const initializePassport = () => {
       },
       async (req, username, password, done) => {
         const { first_name, last_name, email, age } = req.body;
+        let role;
+        if (username !== ADMIN_ID || password !== ADMIN_PASSWORD) {
+          role = "admin";
+        } else {
+          role = "user";
+        }
         try {
           const user = await userManager.getOne(username);
           if (user.length > 0) {
@@ -37,6 +43,7 @@ const initializePassport = () => {
               email,
               age,
               password: createHash(password),
+              role: role,
             };
             let result = await userManager.signup(newUser);
             return done(null, result);
