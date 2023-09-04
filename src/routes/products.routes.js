@@ -12,7 +12,6 @@ router.get("/", async (req, res) => {
   const { limit, page, sort, category } = req.query;
   try {
     const role = req.session.user[0]?.role ?? req.session.user.role;
-    console.log(role);
     const sessionUser = req.session.user[0]?.email ?? req.session.user.email;
     const user = await usersManager.getOne(sessionUser);
     const response = await productsManager.getAll();
